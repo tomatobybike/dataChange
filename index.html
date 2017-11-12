@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/underscore-min.js"></script>
+    <script>
+        var changes=[];
+        var deletes=[];
+        var dataA=[{
+            id:1,
+            name:'漫威',
+            boys:[
+                {
+                    id:1,
+                    name:'雷神'
+                },
+                {
+                    id:2,
+                    name:'如来'
+                }
+            ]
+        },
+            {
+                id:2,
+                name:'DC',
+                boys:[
+                    {
+                        id:3,
+                        name:'蜘蛛侠'
+                    },{
+                        id:4,
+                        name:'火影'
+                    }
+                ]
+            },            {
+                id:4,
+                name:'star',
+                boys:[
+                    {
+                        id:5,
+                        name:'张学友'
+                    },{
+                        id:6,
+                        name:'刘德华'
+                    }
+                ]
+            }
+        ];
+        var dataB=[{
+            id:1,
+            name:'漫威',
+            boys:[
+                {
+                    id:2,
+                    name:'如来'
+                },
+                {
+                    id:1,
+                    name:'超人'
+                }
+            ]
+        },
+            {
+                id:2,
+                name:'DC',
+                boys:[
+                    {
+                        id:3,
+                        name:'蜘蛛侠'
+                    },{
+                        id:4,
+                        name:'火影'
+                    }
+                ]
+            },
+            {
+                id:3,
+                name:'china',
+                boys:[
+                    {
+                        id:7,
+                        name:'蜘蛛侠x'
+                    }
+                ]
+            }
+        ];
+
+        //从arr1里查arr2
+        var getDifference=function (arr1,arr2) {
+            var newArray=[];
+            for(var i=0,ilen=arr2.length;i<ilen;i++){
+                var isNotExit=true;
+                for(var n=0,nlen=arr1.length;n<nlen;n++){
+                    if(_.isEqual(arr2[i],arr1[n])){
+                        isNotExit=false;
+                        break;
+                    }
+                }
+                if(isNotExit){
+                    newArray.push(arr2[i]);
+                }
+            }
+            return newArray;
+        }
+
+        var getDelete=function (arr1,arr2) {
+            var newArray=[];
+            for(var i=0,ilen=arr2.length;i<ilen;i++){
+                var isNotExit=true;
+                for(var n=0,nlen=arr1.length;n<nlen;n++){
+                    if(arr2[i].id==arr1[n].id){
+                        isNotExit=false;
+                        break;
+                    }
+                }
+                if(isNotExit){
+                    newArray.push(arr2[i]);
+                }
+            }
+            return newArray;
+        }
+
+        var getChildDelete=function (data) {
+            var arr=[];
+            for(var i=0,len=data.length;i<len;i++){
+                arr.push(data[i].id);
+            }
+            return arr;
+        }
+
+        for(var i=0,ilen=dataB.length;i<ilen;i++){
+            var isNotExit=true;
+            for(var m=0,mlen=dataA.length;m<mlen;m++){
+                if(dataB[i].id==dataA[m].id && dataB[i].name==dataA[m].name){
+                    isNotExit=false;
+                    var class2changes=getDifference( dataA[m].boys,dataB[i].boys);
+                    var class1=$.extend({}, dataB[i]);
+                    class1.boys=class2changes;
+                    changes.push(class1);
+                    break;
+                }
+            }
+            if(isNotExit){
+                changes.push(dataB[i]);
+            }
+        }
+
+        for(var i=0,ilen=dataA.length;i<ilen;i++){
+            var isNotExit=true;
+            for(var m=0,mlen=dataB.length;m<mlen;m++){
+                if(dataB[i].id==dataA[m].id && dataB[i].name==dataA[m].name){
+                    isNotExit=false;
+                    var class2changes=getDelete( dataB[i].boys,dataA[m].boys);
+                    //var class1=$.extend({}, dataA[i]);
+                    //class1.boys=class2changes;
+                    deletes.concat(class2changes);
+                    break;
+                }
+            }
+            if(isNotExit){
+                deletes.push(dataA[i].id);
+
+                deletes=deletes.concat(getChildDelete(dataA[i].boys));
+            }
+        }
+
+        console.log(dataA,dataB,changes);
+        console.log(deletes);
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
