@@ -54,7 +54,7 @@
             boys:[
                 {
                     id:2,
-                    name:'如来'
+                    name:'如来2'
                 },
                 {
                     id:1,
@@ -136,10 +136,12 @@
                 if(dataB[i].id==dataA[m].id && dataB[i].name==dataA[m].name){
                     isNotExit=false;
                     var class2changes=getDifference( dataA[m].boys,dataB[i].boys);
-                    var class1=$.extend({}, dataB[i]);
-                    class1.boys=class2changes;
-                    changes.push(class1);
-                    break;
+                    if(class2changes.length>0){
+                        var class1=$.extend({}, dataB[i]);
+                        class1.boys=class2changes;
+                        changes.push(class1);
+                        break;
+                    }
                 }
             }
             if(isNotExit){
